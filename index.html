@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#101a20" />
+  <meta name="description" content="Dustline: an offline tactical skirmish built for mobile." />
+  <title>DUSTLINE — Offline Tactical Skirmish</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="gameShell">
+    <canvas id="game" aria-label="Dustline tactical skirmish game"></canvas>
+
+    <section id="menuScreen" class="screen">
+      <div class="menu-backdrop"></div>
+      <div class="menu-content">
+        <div class="eyebrow"><span class="pulse-dot"></span> OFFLINE FIELD SIMULATION <span class="eyebrow-line"></span> SECTOR 07</div>
+        <div class="logo-wrap">
+          <div class="logo-mark"><span></span><span></span><span></span></div>
+          <div><h1>DUST<span>LINE</span></h1><p>TACTICAL RESPONSE UNIT</p></div>
+        </div>
+        <p class="menu-copy">The line won't hold itself.<br /><strong>Lock in. Move out.</strong></p>
+        <div class="briefing">
+          <div class="briefing-head"><span>MISSION BRIEF</span><span class="briefing-tag">LIVE DRILL / 03</span></div>
+          <p>Clear the training ground. Your squad is outnumbered, but not outmatched.</p>
+          <div class="mission-stats"><div><small>MODE</small><b>3v3 SKIRMISH</b></div><div><small>ROUNDS</small><b>FIRST TO 3</b></div><div><small>NETWORK</small><b><i class="status-dot"></i> NOT REQUIRED</b></div></div>
+        </div>
+        <button id="startButton" class="primary-button"><span>DEPLOY SQUAD</span><b>↗</b></button>
+        <div class="menu-foot"><span>FIELD MANUAL</span><span>MOVE · AIM · SURVIVE</span><span>v1.0 / OFFLINE</span></div>
+      </div>
+      <div class="menu-side-note">DUSTLINE<br />// TRAINING DIVISION</div>
+    </section>
+
+    <header id="hud" class="hud hidden">
+      <div class="hud-brand"><div class="mini-mark">D</div><div><b>DUSTLINE</b><small>SECTOR 07 / YARD</small></div></div>
+      <div class="scoreboard"><div class="team-score blue-score"><i></i><span id="blueScore">0</span></div><div class="round-label"><small>ROUND</small><b id="roundNumber">01</b></div><div class="team-score red-score"><span id="redScore">0</span><i></i></div></div>
+      <div class="hud-status"><span class="live-dot"></span><span id="matchStatus">LIVE ENGAGEMENT</span><span class="status-divider"></span><span id="roundClock">00:00</span></div>
+    </header>
+
+    <div id="reticle" class="reticle hidden"><i></i><i></i><i></i><i></i><b></b></div>
+    <div id="hitMarker" class="hit-marker hidden">×</div>
+
+    <div id="playerPanel" class="player-panel hidden">
+      <div class="health-row"><span>VITALS</span><b id="healthValue">100</b></div>
+      <div class="health-track"><i id="healthBar"></i></div>
+      <div class="weapon-row"><div class="weapon-icon">⌁</div><div class="weapon-name"><b>V-9 STRIKER</b><small>5.56 / FIELD ISSUE</small></div><div class="ammo"><b id="ammoClip">24</b><span>/</span><small id="ammoReserve">96</small></div></div>
+    </div>
+
+    <div id="squadPanel" class="squad-panel hidden"><div class="squad-label">SQUAD STATUS <span>BLUE TEAM</span></div><div id="squadPips" class="squad-pips"></div></div>
+    <div id="objectiveHint" class="objective-hint hidden"><span class="objective-icon">✳</span><span><b>OBJECTIVE</b><small>ELIMINATE HOSTILE SQUAD</small></span></div>
+    <div id="killFeed" class="kill-feed"></div>
+    <div id="toast" class="toast"></div>
+
+    <div id="controls" class="controls hidden">
+      <div id="movePad" class="move-pad"><div class="pad-ring"><div id="moveKnob" class="pad-knob"></div></div><span class="pad-label">MOVE</span></div>
+      <div class="touch-actions"><button id="reloadButton" class="action-button reload-button"><span>↻</span><small>RELOAD</small></button><button id="fireButton" class="fire-button"><span class="fire-cross">✣</span><b>FIRE</b></button></div>
+    </div>
+
+    <section id="roundScreen" class="screen round-screen hidden">
+      <div class="round-card"><div id="roundKicker" class="eyebrow">AFTER ACTION REPORT</div><h2 id="roundTitle">ROUND WON</h2><p id="roundCopy">Squad secured the yard.</p><div class="round-result"><span>BLUE</span><b id="resultScore">1 — 0</b><span>RED</span></div><button id="continueButton" class="primary-button"><span>NEXT ROUND</span><b>↗</b></button></div>
+    </section>
+
+    <section id="pauseScreen" class="screen pause-screen hidden">
+      <div class="round-card"><div class="eyebrow">FIELD PAUSED</div><h2>TAKE A BREATH.</h2><p>The field is waiting for you.</p><button id="resumeButton" class="primary-button"><span>RESUME</span><b>↗</b></button><button id="menuButton" class="text-button">RETURN TO BRIEFING</button></div>
+    </section>
+    <button id="pauseButton" class="pause-button hidden" aria-label="Pause game">Ⅱ</button>
+    <div id="desktopHelp" class="desktop-help hidden">WASD <span>MOVE</span><i></i> MOUSE <span>AIM + FIRE</span><i></i> R <span>RELOAD</span><i></i> ESC <span>PAUSE</span></div>
+    <div id="orientationHint" class="orientation-hint"><div class="rotate-icon">↻</div><b>ROTATE FOR THE FIELD</b><small>Dustline is best played in landscape.</small></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
