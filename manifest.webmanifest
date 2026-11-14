@@ -1,0 +1,13 @@
+{
+  "name": "DUSTLINE — Offline Tactical",
+  "short_name": "DUSTLINE",
+  "description": "A solo offline tactical FPS mission.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#111614",
+  "theme_color": "#101513",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
