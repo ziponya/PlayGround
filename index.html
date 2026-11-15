@@ -3,72 +3,51 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#101a20" />
-  <meta name="description" content="Dustline: an offline tactical skirmish built for mobile." />
-  <title>DUSTLINE — Offline Tactical Skirmish</title>
+  <meta name="theme-color" content="#101513" />
+  <meta name="description" content="IRON SIGHT — a first-person tactical arena." />
+  <title>IRON SIGHT — Tactical Arena</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main id="gameShell">
-    <canvas id="game" aria-label="Dustline tactical skirmish game"></canvas>
-
+    <canvas id="game" aria-label="First person tactical shooter"></canvas>
+    <div class="grain"></div>
     <section id="menuScreen" class="screen">
-      <div class="menu-backdrop"></div>
+      <div class="menu-shade"></div>
       <div class="menu-content">
-        <div class="eyebrow"><span class="pulse-dot"></span> OFFLINE FIELD SIMULATION <span class="eyebrow-line"></span> SECTOR 07</div>
-        <div class="logo-wrap">
-          <div class="logo-mark"><span></span><span></span><span></span></div>
-          <div><h1>DUST<span>LINE</span></h1><p>TACTICAL RESPONSE UNIT</p></div>
+        <div class="eyebrow"><i></i> TACTICAL COMBAT SIMULATOR <span>SECTOR 07 / OFFLINE</span></div>
+        <div class="brand"><div class="brand-mark">I<span>S</span></div><div><h1>IRON<span>SIGHT</span></h1><p>FIELD OPERATIONS DIVISION</p></div></div>
+        <p class="tagline">No backup. No second chances.<br><b>Make every shot count.</b></p>
+        <div class="loadout">
+          <div class="loadout-heading"><span>YOUR LOADOUT</span><span class="credits">◈ <b id="credits">1,250</b> CR</span></div>
+          <div class="loadout-grid">
+            <div class="loadout-item"><small>PRIMARY WEAPON</small><select id="weaponSelect"><option value="rifle">R-4 VANDAL · RIFLE</option><option value="pistol">PX-9 · SIDEARM</option><option value="shotgun">BULL-12 · SHOTGUN</option></select></div>
+            <div class="loadout-item"><small>WEAPON FINISH</small><select id="skinSelect"><option value="standard">FIELD STANDARD</option><option value="ember">EMBER STRIKE</option><option value="arctic">ARCTIC CIRCUIT</option><option value="toxic">TOXIC BLOOM</option><option value="royal">ROYAL FLUSH</option></select></div>
+          </div>
+          <div class="case-row"><div class="case-icon">▧</div><div><b>FIELD CASE</b><small>Contains rare weapon finishes</small></div><button id="openCase">OPEN CASE <span>250 CR</span></button></div>
         </div>
-        <p class="menu-copy">The line won't hold itself.<br /><strong>Lock in. Move out.</strong></p>
-        <div class="briefing">
-          <div class="briefing-head"><span>MISSION BRIEF</span><span class="briefing-tag">LIVE DRILL / 03</span></div>
-          <p>Clear the training ground. Your squad is outnumbered, but not outmatched.</p>
-          <div class="mission-stats"><div><small>MODE</small><b>3v3 SKIRMISH</b></div><div><small>ROUNDS</small><b>FIRST TO 3</b></div><div><small>NETWORK</small><b><i class="status-dot"></i> NOT REQUIRED</b></div></div>
-        </div>
-        <button id="startButton" class="primary-button"><span>DEPLOY SQUAD</span><b>↗</b></button>
-        <div class="menu-foot"><span>FIELD MANUAL</span><span>MOVE · AIM · SURVIVE</span><span>v1.0 / OFFLINE</span></div>
+        <button id="startButton" class="primary-button"><span>ENTER THE ARENA</span><b>↗</b></button>
+        <div class="menu-foot"><span>WASD MOVE</span><span>MOUSE AIM</span><span>1 / 2 / 3 WEAPONS</span><span>R RELOAD · E LOOT</span></div>
       </div>
-      <div class="menu-side-note">DUSTLINE<br />// TRAINING DIVISION</div>
+      <div class="menu-side">IS / 07<br>TRAINING GROUND</div>
+      <div class="case-modal hidden" id="caseModal"><div class="case-card"><button id="closeCase" class="close-case">×</button><div class="eyebrow">FIELD ARMORY / SEALED DROP</div><h2>SUPPLY CASE</h2><p>One crate. One finish. Make it count.</p><div class="case-display"><div class="crate-emoji">▧</div><div class="case-glint"></div></div><div id="caseReward" class="case-reward">A mystery finish awaits.</div><button id="rollCase" class="primary-button"><span>UNSEAL CASE · 250 CR</span><b>↗</b></button></div></div>
     </section>
-
-    <header id="hud" class="hud hidden">
-      <div class="hud-brand"><div class="mini-mark">D</div><div><b>DUSTLINE</b><small>SECTOR 07 / YARD</small></div></div>
-      <div class="scoreboard"><div class="team-score blue-score"><i></i><span id="blueScore">0</span></div><div class="round-label"><small>ROUND</small><b id="roundNumber">01</b></div><div class="team-score red-score"><span id="redScore">0</span><i></i></div></div>
-      <div class="hud-status"><span class="live-dot"></span><span id="matchStatus">LIVE ENGAGEMENT</span><span class="status-divider"></span><span id="roundClock">00:00</span></div>
-    </header>
-
+    <header id="hud" class="hud hidden"><div class="hud-brand"><span>IS</span><div><b>IRON SIGHT</b><small>SECTOR 07 / YARD</small></div></div><div class="match-score"><span>OPERATIVE</span><b id="scorePlayer">0</b><i>—</i><b id="scoreEnemy">0</b><span>HOSTILES</span></div><div class="hud-right"><i class="live"></i><span>LIVE OPERATION</span><b id="clock">02:00</b></div></header>
     <div id="reticle" class="reticle hidden"><i></i><i></i><i></i><i></i><b></b></div>
     <div id="hitMarker" class="hit-marker hidden">×</div>
-
-    <div id="playerPanel" class="player-panel hidden">
-      <div class="health-row"><span>VITALS</span><b id="healthValue">100</b></div>
-      <div class="health-track"><i id="healthBar"></i></div>
-      <div class="weapon-row"><div class="weapon-icon">⌁</div><div class="weapon-name"><b>V-9 STRIKER</b><small>5.56 / FIELD ISSUE</small></div><div class="ammo"><b id="ammoClip">24</b><span>/</span><small id="ammoReserve">96</small></div></div>
-    </div>
-
-    <div id="squadPanel" class="squad-panel hidden"><div class="squad-label">SQUAD STATUS <span>BLUE TEAM</span></div><div id="squadPips" class="squad-pips"></div></div>
-    <div id="objectiveHint" class="objective-hint hidden"><span class="objective-icon">✳</span><span><b>OBJECTIVE</b><small>ELIMINATE HOSTILE SQUAD</small></span></div>
-    <div id="killFeed" class="kill-feed"></div>
-    <div id="toast" class="toast"></div>
-
-    <div id="controls" class="controls hidden">
-      <div id="movePad" class="move-pad"><div class="pad-ring"><div id="moveKnob" class="pad-knob"></div></div><span class="pad-label">MOVE</span></div>
-      <div class="touch-actions"><button id="reloadButton" class="action-button reload-button"><span>↻</span><small>RELOAD</small></button><button id="fireButton" class="fire-button"><span class="fire-cross">✣</span><b>FIRE</b></button></div>
-    </div>
-
-    <section id="roundScreen" class="screen round-screen hidden">
-      <div class="round-card"><div id="roundKicker" class="eyebrow">AFTER ACTION REPORT</div><h2 id="roundTitle">ROUND WON</h2><p id="roundCopy">Squad secured the yard.</p><div class="round-result"><span>BLUE</span><b id="resultScore">1 — 0</b><span>RED</span></div><button id="continueButton" class="primary-button"><span>NEXT ROUND</span><b>↗</b></button></div>
-    </section>
-
-    <section id="pauseScreen" class="screen pause-screen hidden">
-      <div class="round-card"><div class="eyebrow">FIELD PAUSED</div><h2>TAKE A BREATH.</h2><p>The field is waiting for you.</p><button id="resumeButton" class="primary-button"><span>RESUME</span><b>↗</b></button><button id="menuButton" class="text-button">RETURN TO BRIEFING</button></div>
-    </section>
-    <button id="pauseButton" class="pause-button hidden" aria-label="Pause game">Ⅱ</button>
-    <div id="desktopHelp" class="desktop-help hidden">WASD <span>MOVE</span><i></i> MOUSE <span>AIM + FIRE</span><i></i> R <span>RELOAD</span><i></i> ESC <span>PAUSE</span></div>
-    <div id="orientationHint" class="orientation-hint"><div class="rotate-icon">↻</div><b>ROTATE FOR THE FIELD</b><small>Dustline is best played in landscape.</small></div>
+    <div id="damageFlash"></div>
+    <div id="playerPanel" class="player-panel hidden"><div class="health-line"><span>HEALTH</span><b id="healthValue">100</b></div><div class="health-bar"><i id="healthBar"></i></div><div class="weapon-line"><div class="weapon-symbol">⌁</div><div><b id="weaponName">R-4 VANDAL</b><small id="weaponSkin">FIELD STANDARD</small></div><div class="ammo"><b id="ammoClip">30</b><span>/</span><small id="ammoReserve">120</small></div></div></div>
+    <div id="objective" class="objective hidden"><span>✳</span><div><b>CONTRACT</b><small>ELIMINATE ALL HOSTILES</small></div></div>
+    <div id="interaction" class="interaction hidden"><b>[ E ]</b> OPEN SUPPLY CRATE</div>
+    <div id="killFeed" class="kill-feed"></div><div id="toast" class="toast"></div>
+    <div id="mobileControls" class="mobile-controls hidden"><div id="movePad" class="move-pad"><div id="moveKnob"></div></div><div class="mobile-right"><button id="reloadTouch">↻<small>RELOAD</small></button><button id="knifeTouch">◢<small>KNIFE</small></button><button id="fireTouch">FIRE</button></div></div>
+    <button id="pauseButton" class="pause-button hidden">Ⅱ</button>
+    <div id="desktopHelp" class="desktop-help hidden">WASD <span>MOVE</span><i></i> MOUSE <span>AIM + FIRE</span><i></i> R <span>RELOAD</span><i></i> E <span>OPEN CASE</span><i></i> ESC <span>PAUSE</span></div>
+    <section id="roundScreen" class="screen overlay-screen hidden"><div class="result-card"><div class="eyebrow">AFTER ACTION REPORT</div><h2 id="roundTitle">ROUND WON</h2><p id="roundCopy">Sector secured.</p><div class="result-score"><span>YOU <b id="resultPlayer">0</b></span><i>—</i><span>HOSTILES <b id="resultEnemy">0</b></span></div><button id="continueButton" class="primary-button"><span>DEPLOY AGAIN</span><b>↗</b></button><button id="returnMenu" class="text-button">RETURN TO ARMORY</button></div></section>
+    <section id="pauseScreen" class="screen overlay-screen hidden"><div class="result-card"><div class="eyebrow">OPERATION PAUSED</div><h2>STAY SHARP.</h2><p>The field is waiting for you.</p><button id="resumeButton" class="primary-button"><span>RESUME OPERATION</span><b>↗</b></button><button id="menuButton" class="text-button">RETURN TO ARMORY</button></div></section>
+    <div id="orientationHint"><b>↻ &nbsp; ROTATE FOR THE FIELD</b><small>Iron Sight is best played in landscape.</small></div>
   </main>
-  <script src="game.js"></script>
+  <script type="module" src="game.js"></script>
 </body>
 </html>
