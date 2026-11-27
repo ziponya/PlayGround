@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="theme-color" content="#dcecd7" />
+  <meta name="description" content="Тихий сад — уютная 3D-игра про выращивание, заботу и торговлю." />
+  <title>Тихий сад — 3D ферма</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23eaf4d9'/%3E%3Cpath d='M16 27V13' stroke='%23284b35' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 17c-6 0-9-3.5-9-9 5.5 0 9 3 9 9Z' fill='%2378a95e'/%3E%3Cpath d='M16 14c0-5.5 3.2-8.7 8.5-9 0 5.8-3.3 9-8.5 9Z' fill='%239bc878'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <canvas id="scene" aria-label="Трёхмерный сад"></canvas>
+
+  <div id="ui">
+    <header class="topbar">
+      <div class="brand glass">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M16 27V13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M16 17c-6 0-9-3.5-9-9 5.5 0 9 3 9 9Z" fill="#78a95e"/><path d="M16 14c0-5.5 3.2-8.7 8.5-9 0 5.8-3.3 9-8.5 9Z" fill="#9bc878"/><path d="M10.5 27h11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="brand-copy">
+          <h1>Тихий сад</h1>
+          <p>твой уголок природы</p>
+        </div>
+      </div>
+
+      <div class="top-actions glass">
+        <button class="icon-btn" id="sound-btn" aria-label="Выключить звук" title="Звук">
+          <svg class="sound-on" viewBox="0 0 24 24" fill="none"><path d="M4 10v4h4l5 4V6l-5 4H4Z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <svg class="sound-off" viewBox="0 0 24 24" fill="none"><path d="M4 10v4h4l5 4V6l-5 4H4Z" fill="currentColor"/><path d="m17 9 5 5m0-5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" id="help-btn" aria-label="Как играть" title="Как играть">?</button>
+        <button class="icon-btn" id="settings-btn" aria-label="Настройки" title="Настройки">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 13.5a7.7 7.7 0 0 0 0-3l2-1.5-2-3.4-2.4 1a8 8 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.6A8 8 0 0 0 7 6.6l-2.4-1-2 3.4 2 1.5a7.7 7.7 0 0 0 0 3l-2 1.5 2 3.4 2.4-1a8 8 0 0 0 2.6 1.5l.4 2.6h4l.4-2.6a8 8 0 0 0 2.6-1.5l2.4 1 2-3.4-2-1.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="resources">
+        <div class="coin-pill" id="coin-pill">
+          <span class="coin-icon">●</span>
+          <span id="coins">0</span>
+          <span class="coin-label">монет</span>
+        </div>
+        <div class="level-pill">
+          <div class="level-badge"><span>Ур.</span><b id="level">1</b></div>
+          <div class="xp-wrap">
+            <div class="xp-label"><span id="xp-text">0 / 80</span><span>опыт</span></div>
+            <div class="xp-bar"><i id="xp-fill"></i></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <aside class="quest-card glass" id="quest-card" aria-live="polite">
+      <div class="quest-top">
+        <div class="quest-icon" id="quest-icon">🌱</div>
+        <div class="quest-copy">
+          <div class="eyebrow">Задание дня</div>
+          <h2 id="quest-title">Первые всходы</h2>
+        </div>
+        <div class="quest-reward"><span>●</span><b id="quest-reward">70</b></div>
+      </div>
+      <p id="quest-desc">Собери 3 урожая</p>
+      <div class="quest-progress-row">
+        <div class="quest-bar"><i id="quest-fill"></i></div>
+        <span id="quest-count">0 / 3</span>
+      </div>
+      <button class="quest-claim" id="quest-claim" hidden>Забрать награду</button>
+    </aside>
+
+    <div class="weather-chip glass">
+      <span class="weather-sun">☀</span>
+      <div><b>Ясно</b><span>+22° · лёгкий бриз</span></div>
+    </div>
+
+    <div id="markers"></div>
+    <div id="hover-tip" role="tooltip"></div>
+    <div id="toast-stack" aria-live="polite"></div>
+
+    <div class="hint-pill" id="hint-pill">
+      <span class="hint-spark">✦</span>
+      <span id="hint-text">Нажми на свободную грядку, чтобы посадить</span>
+    </div>
+
+    <nav class="bottom-dock glass" aria-label="Действия">
+      <button class="dock-btn dock-shop" id="shop-btn">
+        <span class="dock-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 8h14l-1.2 12H6.2L5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9V6.5a3.5 3.5 0 0 1 7 0V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 13c.5 1 1.5 1.5 3 1.5s2.5-.5 3-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="dock-copy"><b>Семена</b><small>купить</small></span>
+      </button>
+      <button class="dock-btn dock-water" id="water-all-btn">
+        <span class="dock-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5c3.4 4.1 6 7.2 6 10.4a6 6 0 0 1-12 0c0-3.2 2.6-6.3 6-10.4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.5 14.5c.4 1.1 1.2 1.8 2.5 1.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        <span class="dock-copy"><b>Полить</b><small id="water-count">все грядки</small></span>
+      </button>
+      <button class="dock-btn dock-market" id="market-btn">
+        <span class="dock-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 9h16v10H4V9Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M3 9l2-5h14l2 5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9v10M16 9v10" stroke="currentColor" stroke-width="1.5"/><path d="M10 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="dock-copy"><b>Рынок</b><small>продать</small></span>
+        <span class="dock-badge" id="sell-badge">0</span>
+      </button>
+    </nav>
+
+    <div class="seed-picker" id="seed-picker" hidden>
+      <div class="seed-picker-head">
+        <div><span class="eyebrow">Грядка <b id="picker-plot-number">1</b></span><h3>Что посадим?</h3></div>
+        <button class="icon-btn small" id="picker-close" aria-label="Закрыть">×</button>
+      </div>
+      <div class="seed-strip" id="seed-strip"></div>
+      <div class="seed-picker-note">Политые растения дают +1 плод к урожаю</div>
+    </div>
+
+    <div class="settings-menu glass" id="settings-menu" hidden>
+      <button id="reset-camera-btn"><span>⌖</span> Сбросить камеру</button>
+      <button id="reset-game-btn" class="danger"><span>↺</span> Начать заново</button>
+      <p>Прогресс сохраняется в браузере.</p>
+    </div>
+
+    <div class="modal-layer" id="modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <section class="market-panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+        <header class="panel-head">
+          <div>
+            <div class="eyebrow">У деревенского прилавка</div>
+            <h2 id="panel-title">Рынок</h2>
+          </div>
+          <button class="close-btn" id="modal-close" aria-label="Закрыть">×</button>
+        </header>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="seeds" role="tab">🌱 Семена</button>
+          <button class="tab" data-tab="sell" role="tab">🧺 Продать <span id="tab-sell-count"></span></button>
+          <button class="tab" data-tab="upgrades" role="tab">🛠 Улучшения</button>
+        </div>
+        <div class="panel-scroll" id="panel-body"></div>
+        <footer class="panel-foot" id="panel-foot"></footer>
+      </section>
+    </div>
+
+    <div class="help-layer" id="help-layer" aria-hidden="true">
+      <div class="modal-backdrop" data-close-help></div>
+      <section class="help-panel" role="dialog" aria-modal="true" aria-labelledby="help-title">
+        <button class="close-btn" data-close-help aria-label="Закрыть">×</button>
+        <div class="help-mark">🌻</div>
+        <div class="eyebrow">Добро пожаловать</div>
+        <h2 id="help-title">Как вырастить свой сад</h2>
+        <p class="help-lead">Всё просто: сажай, поливай, собирай урожай и продавай его на рынке. Монеты пригодятся для новых семян и улучшений.</p>
+        <div class="help-grid">
+          <div class="help-step"><span>1</span><div><b>Посади</b><p>Нажми на свободную грядку и выбери семечко.</p></div></div>
+          <div class="help-step"><span>2</span><div><b>Полей</b><p>Капля над ростком подскажет, что пора воды. Политые растения растут быстрее и дают больше плодов.</p></div></div>
+          <div class="help-step"><span>3</span><div><b>Собери</b><p>Золотая метка означает, что урожай готов. Нажми на неё.</p></div></div>
+          <div class="help-step"><span>4</span><div><b>Продай</b><p>Открой рынок, чтобы продать урожай и купить улучшения.</p></div></div>
+        </div>
+        <div class="help-tip">Совет: можно вращать сад мышью или пальцем, а колесом — приближать.</div>
+        <button class="primary-btn wide" data-close-help>Понятно, в сад!</button>
+      </section>
+    </div>
+  </div>
+
+  <div class="loader" id="loader">
+    <div class="loader-sun">🌻</div>
+    <b>Тихий сад</b>
+    <span>сажаем первые семена…</span>
+  </div>
+
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
